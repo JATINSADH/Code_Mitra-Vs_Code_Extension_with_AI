@@ -1,71 +1,125 @@
-# code-mitra README
+# Code-Mitra VS Code Extension (with Python Backend)
 
-This is the README for your extension "code-mitra". After writing up a brief description, we recommend including the following sections.
 
-## Features
+# 1. **Architectural Overview**
+This version of the project follows a client-server architecture. This is a robust and scalable design where tasks are separated based on their function. Think of it like a restaurant: the frontend is the waiter who takes your order, and the backend is the kitchen that prepares the food.
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+### The Client (VS Code Extension - TypeScript):
+This is the "waiter". It's the frontend that runs directly inside the user's editor. 
 
-For example if there is an image subfolder under your extension project workspace:
+Its main responsibilities are:
+Providing the User Interface (UI) in the sidebar.
+Detecting user actions, like saving a file or clicking a button.
+Sending the file content (the "order") to the backend server for processing.
+Receiving the final results (the "food") from the server and displaying them beautifully to the user.
+The Server (Backend - Python with Flask): This is the "kitchen". It's the backend brain of the application that runs as a separate, local web server. Its main responsibilities are:
+Handling all logic-intensive tasks to keep the extension fast and responsive.
+Running pylint for code analysis.
+Communicating with the external Google Gemini API to get AI insights.
+Sending the final, processed results back to the VS Code extension.
 
-\!\[feature X\]\(images/feature-x.png\)
+**Why this architecture?**
+This separation is excellent because it lets each part do what it's best at. TypeScript is fantastic for building user interfaces and integrating with VS Code, while Python, with its rich libraries for data science and AI, is perfect for handling the heavy data processing and API communication.
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
 
-## Requirements
+# 2. **Features in Detail**
+AI-Powered Code Explanation: When a Python file is saved, the extension sends the code to the AI, which returns a simple explanation of the logic, alternative methods, and potential optimizations.
+Intelligent Error Solutions: The extension uses the pylint tool to find errors. It then sends both the code and the errors to the AI, which explains the errors and provides a corrected code snippet.
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+Interactive Q&A:
+The user can ask a question about the currently open file. The extension sends the question along with the file's content as context to the AI to get a precise answer.
 
-## Extension Settings
+Markdown Task Planner:
+If the user saves a Markdown file with a task description (e.g., "Create a calculator app"), the AI breaks it down into actionable steps.
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+Native UI:
+The interface is built with the official @vscode/webview-ui-toolkit to ensure it looks and feels like a natural part of VS Code.
 
-For example:
 
-This extension contributes the following settings:
+# 3. **File-wise Breakdown**
+package.json (The Manifest)
+Role: This is the manifest file that tells VS Code everything about the extension, including its name, activation events, and dependencies.
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+**Key Sections Explained:**
+activationEvents: We use "onView:codeMitraView" to ensure the extension only activates when the user clicks its icon. This is a crucial performance optimization that prevents our extension from slowing down VS Code's startup time.
 
-## Known Issues
+contributes: This section defines the extension's UI contributions, like the icon in the Activity Bar and the webview panel that hosts our UI.
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+dependencies: It lists necessary npm packages like axios (for making HTTP requests to our Python backend) and @vscode/webview-ui-toolkit (for the native UI components).
 
-## Release Notes
+src/extension.ts (The Brain of the Extension)
+Role: This is the main entry point and core logic file for the TypeScript extension. When the extension is activated, the activate function in this file is executed.
 
-Users appreciate release notes as you update your extension.
 
-### 1.0.0
+### **Key Functions & Logic Explained:**
 
-Initial release of ...
+activate(): This function is the starting point. Its most important jobs are:
 
-### 1.0.1
+Starting the Backend: It uses Node.js's built-in child_process module to run the python backend_server.py command. This starts our Flask server as a separate background process. It also listens to the server's output (stdout) and errors (stderr) to know its status.
 
-Fixed issue #.
+Registering the UI: It registers the CodeMitraViewProvider, which is the class responsible for creating and managing our side panel.
 
-### 1.1.0
+Event Listener (onDidSaveTextDocument): This listener waits for the user to save a file. When a .py or .md file is saved, it reads the file's content and sends it to the Python backend's /analyze endpoint using an axios POST request.
 
-Added features X, Y, and Z.
+CodeMitraViewProvider (Class): This class manages the webview panel. Its resolveWebviewView method sets up the HTML for the UI and handles messages sent from the UI (like an "Ask AI" click), forwarding them to the appropriate backend endpoint.
 
----
+backend/backend_server.py (The Brain of the Operation)
+Role: This is a lightweight web server built with Flask, a popular Python web framework. It exposes API endpoints (URLs) that our VS Code extension can call to get work done.
 
-## Following extension guidelines
 
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
+### **Key Functions (Endpoints) Explained:**
 
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
+@app.route('/analyze', methods=['POST']): This is the main analysis endpoint.
+It receives file content and file type in a JSON format from the extension.
+It runs pylint on the code to find errors.
+It then creates specific prompts (questions) and calls the query_gemini function to get AI explanations and error solutions.
+Finally, it bundles all the results into a single JSON object and sends it back as the HTTP response to the extension.
 
-## Working with Markdown
+@app.route('/ask', methods=['POST']): This endpoint handles the Q&A feature. It receives a question and code context, sends them to the Gemini API, and returns the answer.
 
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
+query_gemini():
+This is a helper function that contains the actual logic for making the requests.post call to the Google Gemini API. It handles the API key and the request format.
 
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
 
-## For more information
+# 4. **Execution Flow (Step-by-Step)**
+Here is how all the pieces work together when a user saves a file:
 
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+Activation: The user clicks the Code-Mitra icon in the VS Code Activity Bar.
 
-**Enjoy!**
+Backend Start: The activate() function in extension.ts runs, which starts the backend_server.py in the background.
+
+UI Creation: The CodeMitraViewProvider creates the webview panel.
+
+User Action: The user saves a Python file (example.py).
+
+Event Fired: The onDidSaveTextDocument event listener in extension.ts catches this action.
+
+Client Request: extension.ts reads the content of example.py and sends it to the Python backend via an axios POST request to http://localhost:5001/analyze.
+
+Server Processing: The Flask server running backend_server.py receives the request at the /analyze endpoint.
+
+AI & Pylint: The server runs pylint on the code and also sends prompts to the Gemini API for explanation and solutions.
+
+Server Response: The server collects all the results and sends them back to the extension as a single JSON response.
+
+UI Update: extension.ts receives the JSON response and uses postMessage to send the data to the webview.
+
+Final Display: The main.js script inside the webview catches the message and updates the HTML to display the explanation and error solutions to the user.
+
+
+
+# **Improtant - API Key Configuration**
+
+This project requires a Google Gemini API key to function.
+Go to Google AI Studio.
+Sign in with your Google account.
+Click on the "Get API key" button.
+Click "Create API key in new project" to generate a new key.
+Copy the newly generated API key.
+Open the backend/backend_server.py file in the project and paste your key into the following line:
+
+API_KEY = "YOUR_GEMINI_API_KEY_HERE"
+
+Save the file.
+
+## **Important: Never share your API key or commit it to a public GitHub repository.**
