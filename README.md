@@ -131,3 +131,89 @@ API_KEY = "YOUR_GEMINI_API_KEY_HERE"
 Save the file.
 
 ## **Important: Never share your API key or commit it to a public GitHub repository.**
+
+
+
+# Code-Mitra VS Code Extension - Detailed Execution Guide
+
+Setup and Usage Guide
+This guide provides detailed, step-by-step instructions to set up, run, and use the Code-Mitra extension on your local machine.
+
+### Step 1: Prerequisites (Essential Tools)
+Before you begin, ensure you have the following tools installed on your computer:
+Node.js and npm: Required to build and manage the extension. Download from nodejs.org.
+
+Python 3: Required to run the backend server. Download from python.org.
+
+Pylint: The code analysis tool. Open your terminal and run: pip install pylint.
+
+VS Code Extension Tools: In your terminal, run this command to install the Yeoman scaffolding tool:
+
+npm install -g yo generator-code
+
+### Step 2: Create the Extension Project (Scaffolding)
+Open your terminal or command prompt, 
+Navigate to the directory where you want to create your project (e.g., cd Desktop), 
+
+Run the scaffolding command:
+yo code
+
+You will be asked a series of questions. Answer them as follows:
+What type of extension do you want to create? -> New Extension (TypeScript), 
+What's the name of your extension? -> code-mitra, 
+What's the identifier of your extension? -> (Press Enter for default), 
+What's the description of your extension? -> Your AI Coding Partner, 
+Initialize a git repository? -> Yes, 
+Bundle the source code with webpack? -> No,
+Which package manager to use? -> npm.
+
+This will create a new folder named code-mitra with all the basic template files.
+
+### Step 3: Place the Project Files
+Now, replace the template files with the final code for the project, 
+Open the newly created code-mitra folder, 
+Backend Files:
+Create a new folder named backend inside the code-mitra folder.
+
+Place the provided backend_server.py and requirements.txt files inside this backend folder, 
+
+Extension Files:
+Replace the content of the existing package.json file with the provided final code, 
+Navigate into the src folder and replace the content of the existing extension.ts file with the provided final code.
+
+UI Files:
+Create a new folder named media inside the code-mitra folder, 
+Place the provided main.css and main.js files inside this media folder, 
+Also, place an icon.svg and icon.png in the media folder.
+
+### Step 4: Install Dependencies
+Backend:
+In your terminal, navigate into the backend folder (cd code-mitra/backend), 
+
+Run the command: pip install -r requirements.txt, 
+Extension:
+In your terminal, navigate to the main code-mitra folder, 
+
+Run the command: npm install
+
+### Step 5: Configure the API Key
+Open the backend/backend_server.py file, 
+Find the line API_KEY = "YOUR_GEMINI_API_KEY_HERE", 
+Replace the placeholder text with your actual Google Gemini API key, 
+Save the file.
+
+### Step 6: Run the Extension (The F5 Step)
+This is the final step to see your extension in action, 
+Open the main code-mitra folder in Visual Studio Code, 
+Press the F5 key on your keyboard, 
+This action does two things:
+It compiles your TypeScript code into JavaScript, 
+It opens a new VS Code window with the title "[Extension Development Host]", 
+Your "Code-Mitra" extension is now installed and running only inside this new window.
+
+### Step 7: How to Use the Extension
+In the new [Extension Development Host] window, look at the Activity Bar on the far left. You should see the new "Code-Mitra" icon. Click on it, 
+The Code-Mitra panel will open in the sidebar. Initially, it will say "Status: Waiting for backend...". After a few seconds, this should change to "Status: Backend Ready & Connected", 
+Open any Python (.py) file, write some code, and press Save (Ctrl+S), 
+The analysis results will automatically appear in the appropriate tabs in the Code-Mitra panel, 
+To ask a question, type it in the input box at the bottom of the panel and click the "Ask AI" button.
