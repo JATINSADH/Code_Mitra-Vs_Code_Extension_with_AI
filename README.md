@@ -124,7 +124,7 @@ Click "Create API key in new project" to generate a new key.
 
 Copy the newly generated API key.
 
-Open the backend/backend_server.py file in the project and paste your key into the following line:
+Open the backend/backend_server.py file and src/extension.ts in the project and paste your key into the following line:
 
 API_KEY = "YOUR_GEMINI_API_KEY_HERE"
 
