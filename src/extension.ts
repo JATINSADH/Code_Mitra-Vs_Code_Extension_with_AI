@@ -7,7 +7,7 @@ import * as fs from 'fs';
 
 // --- Configuration ---
 // IMPORTANT: Replace with your actual Gemini API key.
-const API_KEY: string = "AIzaSyCvmFH_sO6Ice5zHFA1C6YMdxS7rqjhSZg";
+const API_KEY: string = "YOUR_GEMINI_API_KEY_HERE";
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${API_KEY}`;
 
 let webviewProvider: CodeMitraViewProvider | undefined;
