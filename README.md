@@ -108,14 +108,22 @@ Final Display: The main.js script inside the webview catches the message and upd
 
 
 
+
+
 # **Improtant - API Key Configuration**
 
-This project requires a Google Gemini API key to function.
+This project requires a Google Gemini API key to function. 
+
 Go to Google AI Studio.
+
 Sign in with your Google account.
+
 Click on the "Get API key" button.
+
 Click "Create API key in new project" to generate a new key.
+
 Copy the newly generated API key.
+
 Open the backend/backend_server.py file in the project and paste your key into the following line:
 
 API_KEY = "YOUR_GEMINI_API_KEY_HERE"
