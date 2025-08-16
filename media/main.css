@@ -1,0 +1,65 @@
+body {
+    padding: 10px;
+    color: var(--vscode-foreground);
+    background-color: var(--vscode-side-bar-background);
+}
+
+/* FIXED: Title ko behtar banane ke liye naye styles */
+h1 {
+    font-weight: bold;
+    font-size: 1.8em; /* Title ko bada kiya gaya */
+    color: var(--vscode-button-background); /* VS Code ke theme se milta-julta neela color */
+    text-align: center; /* Title ko center mein kiya gaya */
+    margin-bottom: 20px; /* Neeche thodi jagah di gayi */
+    text-shadow: 0 0 5px var(--vscode-button-hoverBackground); /* Halki si chamak di gayi */
+}
+
+h2 {
+    font-weight: bold;
+}
+
+#status-bar {
+    margin-bottom: 15px;
+    padding: 5px;
+    border-radius: 3px;
+    background-color: var(--vscode-editor-background);
+}
+
+.content {
+    padding-top: 10px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.solution-box {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: var(--vscode-editor-background);
+    border-left: 3px solid var(--vscode-terminal-ansiGreen);
+    border-radius: 3px;
+}
+
+.solution-box h3 {
+    margin-top: 0;
+    font-size: 1.1em;
+}
+
+#qa-section {
+    margin-top: 20px;
+    border-top: 1px solid var(--vscode-editor-foreground);
+    padding-top: 10px;
+}
+
+vscode-text-area {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.qna-block {
+    margin-top: 15px;
+}
+
+.qna-block h3 {
+    font-size: 1.1em;
+    font-weight: bold;
+}
