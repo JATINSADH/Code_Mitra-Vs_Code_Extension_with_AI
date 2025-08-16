@@ -10,7 +10,7 @@ import logging
 
 # --- Configuration ---
 # IMPORTANT: Replace with your actual Gemini API key.
-API_KEY = "AIzaSyCvmFH_sO6Ice5zHFA1C6YMdxS7rqjhSZg"
+API_KEY = "YOUR_GEMINI_API_KEY_HERE"
 GEMINI_API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key={API_KEY}"
 
 app = Flask(__name__)
